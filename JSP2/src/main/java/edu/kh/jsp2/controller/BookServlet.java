@@ -37,7 +37,7 @@ public class BookServlet extends HttpServlet{
 		req.setAttribute("bookList", bookList);		
 		
 		// 응답
-		// JSP 로 요청 위임 (webapp 폴더 기준)
+		// JSP 로 요청 위임 (webapp 폴더 기준) 
 		req.getRequestDispatcher("/WEB-INF/views/book/bookList.jsp").forward(req, resp);
 		
 		

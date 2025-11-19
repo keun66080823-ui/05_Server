@@ -195,7 +195,7 @@
 	<ul>
 		<c:forEach var="name" items="${nameList}" varStatus="vs">
 			
-			<c:if test="${vs.first}"> <%-- 현재 반복이 처음일 때만 구동 --%>
+			<c:if test="${vs.first}"> <%-- 현재 반복이 처음일 때만 구동  --%>
 				<li>-------------시작-------------</li>
 			</c:if>
 			
