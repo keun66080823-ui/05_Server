@@ -41,6 +41,19 @@ jsp	 : html, css, js, java, el, jstl 작성 가능
 	</h1>
 	
 	
+	<hr>
+	
+	<h1>
+		<a href="/jstl/test">JSTL 다뤄보기</a>
+	</h1>
+	
+	<hr>
+	
+	<h1>
+		<a href="/book/list">책 목록 조회하기</a>
+	</h1>
+	
+	
 	
 	
 </body>
