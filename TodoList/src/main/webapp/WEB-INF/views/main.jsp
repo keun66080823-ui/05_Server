@@ -56,7 +56,12 @@
 				<tr>
 					<th>${vs.count}</th>
 					<th>${todo.todoNo}</th>
-					<td><a href="#">${todo.todoTitle}</a></td>
+					<td>
+						<%-- 제목 클릭 시
+						todoNo(고유 todo번호)를 데이터로 전송(제출)하여
+						서버에서 상세내용 조회 시 todoNo를 이용하게끔 함
+						 --%>
+						<a href="/todo/detail?todoNo=${todo.todoNo}">${todo.todoTitle}</a></td>
 					<th><c:if test="${todo.todoComplete}">O</c:if> <%-- todo의 todoComplete가 true라면 O 출력 --%>
 
 						<c:if test="${not todo.todoComplete}">X</c:if> <%-- todo의 todoComplete가 true가 아니라면 X 출력 --%>
@@ -73,6 +78,7 @@
 		<script>
 			// JS 영역
 			alert("${message}");
+
 			// JSP 해석 순위
 			// 1순위 : Java(EL/JSTL) == TodoAddServlet의 message 해석
 			// 2순위 : Front(HTML/CSS/JS) == 위의 alert
@@ -82,6 +88,8 @@
 		<c:remove var="message" scope="session"/>
 	</c:if>
 
+	<%-- js 연결 --%>
+	<script src="/resources/js/main.js"></script>
 
 
 </body>
