@@ -39,48 +39,40 @@ public class TodoListDAOImpl implements TodoListDAO {
 
 	}
 
-	
-	
 	@Override
 	public List<Todo> todoListFullView(Connection conn) throws Exception {
 
 		// 결과 저장용 변수 선언
 		List<Todo> todoList = new ArrayList();
 
-		
 		try {
 			// SQL 작성
 			String sql = prop.getProperty("todoListFullView"); // sql.xml의 sql 구문을 가져옴
-			/* String sql = SELECT TODO_NO,
-			  TODO_TITLE, 
-			  TODO_COMPLETE, 
-			  TO_CHAR(REG_DATE, 'YYYY-MM-DD HH24:MI:SS') REG_DATE 
-			  FROM TB_TODO ORDER BY TODO_NO */
-			
+			/*
+			 * String sql = SELECT TODO_NO, TODO_TITLE, TODO_COMPLETE, TO_CHAR(REG_DATE,
+			 * 'YYYY-MM-DD HH24:MI:SS') REG_DATE FROM TB_TODO ORDER BY TODO_NO
+			 */
+
 			stmt = conn.createStatement();
-			
+
 			// executeQuery() - SELECT 구문 수행 후 ResultSet 반환
 			// executeUpadate() - DML(INSERT/UPDATE/DELETE) 수행후
-			//					  결과 행의 갯수 반환
+			// 결과 행의 갯수 반환
 			rs = stmt.executeQuery(sql);
-			
-			while(rs.next()) {
-				
+
+			while (rs.next()) {
+
 				// Builder 패턴 : 특정값으로 초기화된 객체를
-				//				쉽게 만드는 방법
+				// 쉽게 만드는 방법
 				// -> Lombok에서 제공하는 @Builder 어노테이션을
-				//	  DTO 에 작성하여 준비
+				// DTO 에 작성하여 준비
 				boolean complete = rs.getInt("TODO_COMPLETE") == 1; // 미완료(0)상태면 false, 완료(1) 상태면 true
-				
-				Todo todo = Todo.builder()
-							.todoNo(rs.getInt("TODO_NO"))
-							.todoTitle(rs.getString("TODO_TITLE"))
-							.todoComplete(complete)
-							.regDate(rs.getString("REG_DATE"))
-							.build();
-				
+
+				Todo todo = Todo.builder().todoNo(rs.getInt("TODO_NO")).todoTitle(rs.getString("TODO_TITLE"))
+						.todoComplete(complete).regDate(rs.getString("REG_DATE")).build();
+
 				todoList.add(todo);
-				
+
 			}
 
 		} finally {
@@ -91,47 +83,114 @@ public class TodoListDAOImpl implements TodoListDAO {
 		return todoList;
 	}
 
-
-
 	@Override
 	public int getCompleteCount(Connection conn) throws Exception {
-		
+
 		// 결과 저장용 변수 선언
 		int completeCount = 0;
-		
+
 		try {
 			String sql = prop.getProperty("getCompleteCount");
-			
+
 			stmt = conn.createStatement();
-			
+
 			rs = stmt.executeQuery(sql);
-			
-			if(rs.next()) {
+
+			if (rs.next()) {
 				completeCount = rs.getInt(1);
 			}
-			
+
 		} finally {
 			close(rs);
 			close(stmt);
 		}
-		
-		return completeCount;
-	
-	}
 
+		return completeCount;
+
+	}
 
 	@Override
 	public int todoAdd(Connection conn, String title, String detail) throws Exception {
+
+		int result = 0;
+
+		try {
+			String sql = prop.getProperty("todoAdd");
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, title);
+			pstmt.setString(2, detail);
+
+			result = pstmt.executeUpdate();
+
+		} finally {
+			close(pstmt);
+		}
+
+		return result;
+	}
+
+	@Override
+	public Todo todoDetail(Connection conn, int todoNo) throws Exception {
+
+		Todo todo = null; // 결과 저장용 변수 선언
+
+		try {
+			String sql = prop.getProperty("todoDetail");
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, todoNo);
+
+			rs = pstmt.executeQuery();
+
+			if (rs.next()) {
+				boolean complete = rs.getInt("TODO_COMPLETE") == 1;
+
+				todo = Todo.builder().todoNo(todoNo).todoTitle(rs.getString("TODO_TITLE"))
+						.todoDetail(rs.getString("TODO_DETAIL")).todoComplete(complete)
+						.regDate(rs.getString("REG_DATE")).build();
+
+			}
+
+		} finally {
+			close(rs);
+			close(pstmt);
+		}
+
+		return todo;
+	}
+
+	@Override
+	public int todoComplete(Connection conn, int todoNo) throws Exception {
+
+		int result = 0;
+
+		try {
+			String sql = prop.getProperty("todoComplete");
+
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, todoNo);
+
+			result = pstmt.executeUpdate();
+
+		} finally {
+			close(pstmt);
+		}
+
+		return result;
+	}
+
+	@Override
+	public int todoDelete(Connection conn, int todoNo) throws Exception {
 		
 		int result = 0;
 		
 		try {
-			String sql = prop.getProperty("todoAdd");
+			String sql = prop.getProperty("todoDelete");
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, title);
-			pstmt.setString(2, detail);
-		
+			pstmt.setInt(1, todoNo);
+			
 			result = pstmt.executeUpdate();
 			
 		} finally {
@@ -140,39 +199,28 @@ public class TodoListDAOImpl implements TodoListDAO {
 		
 		return result;
 	}
-
+	
 	@Override
-	public Todo todoDetail(Connection conn, int todoNo) throws Exception {
+	public int todoUpdate(Connection conn, int todoNo, String title, String detail) throws Exception {
 		
-		Todo todo = null; // 결과 저장용 변수 선언
+		int result = 0;
 		
 		try {
-			String sql = prop.getProperty("todoDetail");
+			String sql = prop.getProperty("todoUpdate");
 			
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, todoNo);
+			pstmt.setString(1, title);
+			pstmt.setString(2, detail);
+			pstmt.setInt(3, todoNo);
 			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				boolean complete = rs.getInt("TODO_COMPLETE") == 1;
-				
-				todo = Todo.builder()
-						.todoNo(todoNo)
-						.todoTitle(rs.getString("TODO_TITLE"))
-						.todoDetail(rs.getString("TODO_DETAIL"))
-						.todoComplete(complete)
-						.regDate(rs.getString("REG_DATE"))
-						.build();
-				
-			}
+			result = pstmt.executeUpdate();
 			
 		} finally {
-			close(rs);
 			close(pstmt);
 		}
 		
-		return todo;
+		
+		return result;
 	}
 
 }

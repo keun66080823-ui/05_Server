@@ -44,6 +44,26 @@
 		</div>
 	</div>
 	
+	<%-- session 범위에 message 가 있는 경우 --%>
+	<c:if test="${not empty sessionScope.message}">
+		<script>
+			// JS 영역
+			alert("${message}");
+			// JSP 해석 순위
+			// 1순위 : Java(EL/JSTL) == TodoAddServlet의 message 해석
+			// 2순위 : Front(HTML/CSS/JS) == 위의 alert
+		</script>
+		
+		<%-- message를 한 번만 사용하고 제거 --%>
+		<c:remove var="message" scope="session"/>
+	</c:if>
+	
+	
+	
+	
+	
+	
+	<script src="/resources/js/detail.js"></script>
 	
 	
 </body>
