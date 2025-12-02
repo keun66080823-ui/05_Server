@@ -16,7 +16,8 @@ public class ELTestServlet1 extends HttpServlet{
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
 									throws ServletException, IOException {
 		
-		// 요청처리
+		// 요청처리 //시험!!! index.jsp의 name값으로 파라미터를 얻어옴!
+		req.getParameter("str");
 		//-----------
 		// 응답처리
 		RequestDispatcher dispatcher 

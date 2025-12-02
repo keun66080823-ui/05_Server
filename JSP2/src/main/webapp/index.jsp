@@ -49,7 +49,7 @@ jsp	 : html, css, js, java, el, jstl 작성 가능
 	
 	<hr>
 	
-	<h1>
+	<h1> <!-- jsp 파일에 작성한 경로와 servlet의 요청주소가 같아야 한다 -->
 		<a href="/book/list">책 목록 조회하기</a>
 	</h1>
 	

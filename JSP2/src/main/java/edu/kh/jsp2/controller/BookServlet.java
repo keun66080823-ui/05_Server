@@ -11,10 +11,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet ("/book/list")
+@WebServlet ("/book/list") //시험!! 어노테이션 및 요청주소 필수!!!
 public class BookServlet extends HttpServlet{
 	
-	@Override
+	@Override	  //시험!!! post인가 get 방식인가
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
 							throws ServletException, IOException {
 		// 요청
@@ -39,7 +39,7 @@ public class BookServlet extends HttpServlet{
 		// 응답
 		// JSP 로 요청 위임 (webapp 폴더 기준) 
 		req.getRequestDispatcher("/WEB-INF/views/book/bookList.jsp").forward(req, resp);
-		
+		// 시험!!! .forward가 있어야 위임이 가능!!!
 		
 	}
 
